@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 
@@ -19,7 +19,182 @@ function TodoPage() {
 
   const [year, month, day] = date.split("-").map(Number);
 
-    const selectedDate = new Date(year, month - 1, day);
+  const selectedDate = new Date(year, month - 1, day);
+
+  // ============================================
+  // TIME OF DAY
+  // ============================================
+
+  const getTimeOfDay = () => {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) {
+      return "morning";
+    }
+
+    if (hour >= 12 && hour < 18) {
+      return "afternoon";
+    }
+
+    return "evening";
+  };
+
+  const [timeOfDay, setTimeOfDay] = useState(getTimeOfDay());
+
+  useEffect(() => {
+    const updateTimeOfDay = () => {
+      const currentTimeOfDay = getTimeOfDay();
+
+      setTimeOfDay((previousTimeOfDay) => {
+        if (previousTimeOfDay !== currentTimeOfDay) {
+          return currentTimeOfDay;
+        }
+
+        return previousTimeOfDay;
+      });
+    };
+
+    updateTimeOfDay();
+
+    const interval = setInterval(updateTimeOfDay, 30000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  // ============================================
+  // BACKGROUND THEMES
+  // ============================================
+
+  const backgroundStyles = {
+    morning: {
+      page:
+        "bg-gradient-to-br from-sky-100 via-blue-50 to-indigo-100",
+      card:
+        "border-blue-100 bg-white/95 shadow-blue-200/60",
+      selected:
+        "border-blue-100 bg-blue-50",
+      button:
+        "bg-blue-500 shadow-blue-200 hover:bg-blue-600 hover:shadow-blue-300",
+      logo:
+        "bg-blue-500 shadow-blue-200",
+    },
+
+    afternoon: {
+      page:
+        "bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100",
+      card:
+        "border-sky-100 bg-white/95 shadow-sky-200/60",
+      selected:
+        "border-sky-100 bg-sky-50",
+      button:
+        "bg-sky-500 shadow-sky-200 hover:bg-sky-600 hover:shadow-sky-300",
+      logo:
+        "bg-sky-500 shadow-sky-200",
+    },
+
+    evening: {
+      page:
+        "bg-gradient-to-br from-indigo-200 via-blue-100 to-slate-200",
+      card:
+        "border-indigo-100 bg-white/95 shadow-indigo-200/60",
+      selected:
+        "border-indigo-100 bg-indigo-50",
+      button:
+        "bg-indigo-500 shadow-indigo-200 hover:bg-indigo-600 hover:shadow-indigo-300",
+      logo:
+        "bg-indigo-500 shadow-indigo-200",
+    },
+  };
+
+  const theme = backgroundStyles[timeOfDay];
+
+  // ============================================
+  // FLOATING DECORATIONS
+  // ============================================
+
+  const decorations = useMemo(() => {
+    const flowers = ["✿", "❀", "❁", "✾", "✽", "❋"];
+    const hearts = ["♥", "♡", "♥", "♡"];
+    const sparkles = ["✦", "✧", "⋆", "✦", "✧"];
+
+    const createDecoration = (
+      type,
+      index,
+      symbols,
+      sizeMin,
+      sizeMax,
+      durationMin,
+      durationMax
+    ) => {
+      const symbol =
+        symbols[Math.floor(Math.random() * symbols.length)];
+
+      const size =
+        Math.floor(
+          Math.random() * (sizeMax - sizeMin + 1)
+        ) + sizeMin;
+
+      const duration =
+        Math.floor(
+          Math.random() * (durationMax - durationMin + 1)
+        ) + durationMin;
+
+      const delay =
+        -Math.floor(Math.random() * duration);
+
+      const left = Math.floor(Math.random() * 100);
+
+      return {
+        id: `${type}-${index}`,
+        symbol,
+        left: `${left}%`,
+        size: `${size}px`,
+        duration: `${duration}s`,
+        delay: `${delay}s`,
+        soft: Math.random() > 0.5,
+      };
+    };
+
+    return {
+      flowers: Array.from({ length: 16 }, (_, index) =>
+        createDecoration(
+          "flower",
+          index,
+          flowers,
+          22,
+          34,
+          14,
+          24
+        )
+      ),
+
+      hearts: Array.from({ length: 8 }, (_, index) =>
+        createDecoration(
+          "heart",
+          index,
+          hearts,
+          18,
+          28,
+          16,
+          26
+        )
+      ),
+
+      sparkles: Array.from({ length: 10 }, (_, index) =>
+        createDecoration(
+          "sparkle",
+          index,
+          sparkles,
+          16,
+          25,
+          12,
+          20
+        )
+      ),
+    };
+  }, []);
 
   // ============================================
   // DATE HELPERS
@@ -49,21 +224,24 @@ function TodoPage() {
 
   const getDateString = (dateObject) => {
     const year = dateObject.getFullYear();
-    const month = String(dateObject.getMonth() + 1).padStart(2, "0");
+    const month = String(dateObject.getMonth() + 1).padStart(
+      2,
+      "0"
+    );
     const day = String(dateObject.getDate()).padStart(2, "0");
 
     return `${year}-${month}-${day}`;
   };
 
-const goToDate = (offset) => {
-  const newDate = new Date(
-    year,
-    month - 1,
-    day + offset
-  );
+  const goToDate = (offset) => {
+    const newDate = new Date(
+      year,
+      month - 1,
+      day + offset
+    );
 
-  navigate(`/todo/${getDateString(newDate)}`);
-};
+    navigate(`/todo/${getDateString(newDate)}`);
+  };
 
   // ============================================
   // NOTIFICATION
@@ -163,7 +341,6 @@ const goToDate = (offset) => {
       ? new Date().toISOString()
       : null;
 
-    // Optimistic UI update
     setTodos((currentTodos) =>
       currentTodos.map((item) =>
         item.id === todo.id
@@ -187,7 +364,6 @@ const goToDate = (offset) => {
     if (error) {
       console.error("Error updating todo:", error);
 
-      // Revert if update fails
       setTodos((currentTodos) =>
         currentTodos.map((item) =>
           item.id === todo.id
@@ -206,10 +382,11 @@ const goToDate = (offset) => {
     }
 
     showNotification(
-      newCompleted ? "Todo completed! 🎉" : "Todo reopened."
+      newCompleted
+        ? "Todo completed! 🎉"
+        : "Todo reopened."
     );
 
-    // Refresh so completed todos move to the correct position
     fetchTodos();
   };
 
@@ -351,7 +528,9 @@ const goToDate = (offset) => {
 
   const progress =
     todos.length > 0
-      ? Math.round((completedCount / todos.length) * 100)
+      ? Math.round(
+          (completedCount / todos.length) * 100
+        )
       : 0;
 
   const deleteTodoItem = todos.find(
@@ -363,43 +542,115 @@ const goToDate = (offset) => {
   // ============================================
 
   return (
-    <main className="min-h-screen overflow-hidden bg-blue-50 px-4 py-5 sm:py-6">
-      <div className="mx-auto w-full max-w-lg">
+    <main
+      className={`relative h-screen overflow-hidden px-4 py-4 transition-all duration-[2000ms] sm:py-5 ${theme.page}`}
+    >
+      {/* ============================================
+          FLOATING BACKGROUND
+      ============================================ */}
 
-        {/* ============================================
-            NOTIFICATION
-        ============================================ */}
+      <div
+        key={timeOfDay}
+        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+      >
+        {/* FLOWERS */}
 
-        {notification && (
-          <div
-            className={`fixed left-1/2 top-4 z-50 flex -translate-x-1/2 items-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold shadow-xl ${
-              notification.type === "error"
-                ? "border border-red-100 bg-white text-red-500"
-                : "border border-blue-100 bg-white text-blue-600"
+        {decorations.flowers.map((flower) => (
+          <span
+            key={flower.id}
+            className={`floating-decoration ${
+              flower.soft
+                ? "floating-flower-soft"
+                : "floating-flower"
             }`}
+            style={{
+              left: flower.left,
+              fontSize: flower.size,
+              animationDuration: flower.duration,
+              animationDelay: flower.delay,
+            }}
           >
-            <span>
-              {notification.type === "error" ? "⚠️" : "♥"}
-            </span>
+            {flower.symbol}
+          </span>
+        ))}
 
-            {notification.message}
-          </div>
-        )}
+        {/* HEARTS */}
 
+        {decorations.hearts.map((heart) => (
+          <span
+            key={heart.id}
+            className={`floating-decoration ${
+              heart.soft
+                ? "floating-heart-soft"
+                : "floating-heart"
+            }`}
+            style={{
+              left: heart.left,
+              fontSize: heart.size,
+              animationDuration: heart.duration,
+              animationDelay: heart.delay,
+            }}
+          >
+            {heart.symbol}
+          </span>
+        ))}
+
+        {/* SPARKLES */}
+
+        {decorations.sparkles.map((sparkle) => (
+          <span
+            key={sparkle.id}
+            className="floating-decoration floating-sparkle"
+            style={{
+              left: sparkle.left,
+              fontSize: sparkle.size,
+              animationDuration: sparkle.duration,
+              animationDelay: sparkle.delay,
+            }}
+          >
+            {sparkle.symbol}
+          </span>
+        ))}
+      </div>
+
+      {/* ============================================
+          NOTIFICATION
+      ============================================ */}
+
+      {notification && (
+        <div
+          className={`fixed left-1/2 top-4 z-50 flex -translate-x-1/2 items-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold shadow-xl ${
+            notification.type === "error"
+              ? "border border-red-100 bg-white text-red-500"
+              : "border border-blue-100 bg-white text-blue-600"
+          }`}
+        >
+          <span>
+            {notification.type === "error" ? "⚠️" : "♥"}
+          </span>
+
+          {notification.message}
+        </div>
+      )}
+
+      {/* ============================================
+          MAIN CONTENT
+      ============================================ */}
+
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-lg flex-col">
         {/* ============================================
             HEADER
         ============================================ */}
 
-        <header className="mb-4">
+        <header className="mb-3 shrink-0">
           <div className="flex items-center gap-3">
-
             <button
               type="button"
               onClick={() => navigate("/")}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-lg text-blue-500 shadow-md shadow-blue-100 transition hover:-translate-y-0.5 hover:bg-blue-50"
+              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-lg text-blue-500 shadow-md transition hover:-translate-y-0.5 hover:bg-blue-50 ${theme.logo}`}
               aria-label="Back to calendar"
             >
-              ←
+              <span className="text-blue-500">←</span>
             </button>
 
             <div className="min-w-0">
@@ -411,7 +662,6 @@ const goToDate = (offset) => {
                 Plan your day, one step at a time.
               </p>
             </div>
-
           </div>
         </header>
 
@@ -419,12 +669,14 @@ const goToDate = (offset) => {
             MAIN CARD
         ============================================ */}
 
-        <section className="rounded-3xl border border-blue-100 bg-white p-4 shadow-xl shadow-blue-100/50 sm:p-5">
-
+        <section
+          className={`flex min-h-0 flex-1 flex-col overflow-hidden rounded-3xl border p-4 shadow-xl transition-all duration-[2000ms] sm:p-5 ${theme.card}`}
+        >
           {/* DATE HEADER */}
 
-          <div className="mb-4 flex items-center gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-3">
-
+          <div
+            className={`mb-3 flex shrink-0 items-center gap-3 rounded-2xl border p-3 transition-all duration-[2000ms] ${theme.selected}`}
+          >
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-lg shadow-sm">
               📅
             </div>
@@ -438,15 +690,13 @@ const goToDate = (offset) => {
                 {formatDate(selectedDate)}
               </strong>
             </div>
-
           </div>
 
           {/* ============================================
               PREVIOUS / TODAY / NEXT
           ============================================ */}
 
-          <div className="mb-4 flex items-center gap-2">
-
+          <div className="mb-3 flex shrink-0 items-center gap-2">
             <button
               type="button"
               onClick={() => goToDate(-1)}
@@ -460,8 +710,10 @@ const goToDate = (offset) => {
               onClick={() => {
                 const today = new Date();
 
-                navigate(`/todo/${getDateString(today)}`);
-                }}
+                navigate(
+                  `/todo/${getDateString(today)}`
+                );
+              }}
               className="flex h-10 items-center justify-center rounded-xl border border-blue-100 bg-blue-50 px-4 text-xs font-semibold text-blue-600 transition hover:bg-blue-100"
             >
               Today
@@ -474,7 +726,6 @@ const goToDate = (offset) => {
             >
               Next →
             </button>
-
           </div>
 
           {/* ============================================
@@ -482,10 +733,8 @@ const goToDate = (offset) => {
           ============================================ */}
 
           {todos.length > 0 && (
-            <div className="mb-4">
-
+            <div className="mb-3 shrink-0">
               <div className="mb-1.5 flex items-center justify-between px-1">
-
                 <span className="text-xs font-medium text-slate-500">
                   {completedCount} of {todos.length} completed
                 </span>
@@ -493,18 +742,15 @@ const goToDate = (offset) => {
                 <span className="text-xs font-bold text-blue-500">
                   {progress}%
                 </span>
-
               </div>
 
               <div className="h-2.5 overflow-hidden rounded-full bg-blue-50">
-
                 <div
                   className="h-full rounded-full bg-blue-500 transition-all duration-500"
                   style={{
                     width: `${progress}%`,
                   }}
                 />
-
               </div>
 
               {progress === 100 && (
@@ -512,7 +758,6 @@ const goToDate = (offset) => {
                   Everything is done! 🎉💙
                 </p>
               )}
-
             </div>
           )}
 
@@ -520,8 +765,7 @@ const goToDate = (offset) => {
               ADD TODO
           ============================================ */}
 
-          <div className="mb-5 flex gap-2">
-
+          <div className="mb-3 flex shrink-0 gap-2">
             <input
               type="text"
               value={newTodo}
@@ -538,217 +782,204 @@ const goToDate = (offset) => {
               type="button"
               onClick={addTodo}
               disabled={saving || !newTodo.trim()}
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-500 text-xl font-bold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+              className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-xl font-bold text-white shadow-lg transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 ${theme.button}`}
               aria-label="Add todo"
             >
               {saving ? "…" : "+"}
             </button>
-
           </div>
 
           {/* ============================================
-              LOADING
+              TODO LIST SCROLL AREA
           ============================================ */}
 
-          {loading ? (
-            <div className="py-10 text-center">
+          <div className="min-h-0 flex-1 overflow-y-auto pr-1 scrollbar-thin">
+            {loading ? (
+              <div className="py-10 text-center">
+                <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-blue-100 border-t-blue-500" />
 
-              <div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-blue-100 border-t-blue-500" />
+                <p className="mt-3 text-sm text-slate-400">
+                  Loading your todos...
+                </p>
+              </div>
+            ) : todos.length > 0 ? (
+              <div className="space-y-2 pb-1">
+                {todos.map((todo) => (
+                  <div
+                    key={todo.id}
+                    className={`group rounded-2xl border p-3 transition ${
+                      todo.completed
+                        ? "border-blue-100 bg-blue-50"
+                        : "border-slate-100 bg-white hover:border-blue-100 hover:bg-blue-50/40"
+                    }`}
+                  >
+                    {editingId === todo.id ? (
+                      /* ====================================
+                         EDIT MODE
+                      ==================================== */
 
-              <p className="mt-3 text-sm text-slate-400">
-                Loading your todos...
-              </p>
-
-            </div>
-          ) : todos.length > 0 ? (
-
-            /* ============================================
-               TODO LIST
-            ============================================ */
-
-            <div className="space-y-2">
-
-              {todos.map((todo) => (
-
-                <div
-                  key={todo.id}
-                  className={`group rounded-2xl border p-3 transition ${
-                    todo.completed
-                      ? "border-blue-100 bg-blue-50"
-                      : "border-slate-100 bg-white hover:border-blue-100 hover:bg-blue-50/40"
-                  }`}
-                >
-
-                  {editingId === todo.id ? (
-
-                    /* ====================================
-                       EDIT MODE
-                    ==================================== */
-
-                    <div className="flex gap-2">
-
-                      <input
-                        type="text"
-                        value={editingTitle}
-                        onChange={(event) =>
-                          setEditingTitle(event.target.value)
-                        }
-                        onKeyDown={(event) =>
-                          handleEditKeyDown(event, todo.id)
-                        }
-                        autoFocus
-                        className="min-w-0 flex-1 rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() => saveEdit(todo.id)}
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-500 text-sm font-bold text-white transition hover:bg-blue-600"
-                        aria-label="Save edit"
-                      >
-                        ✓
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={cancelEditing}
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-bold text-slate-500 transition hover:bg-slate-200"
-                        aria-label="Cancel edit"
-                      >
-                        ×
-                      </button>
-
-                    </div>
-
-                  ) : (
-
-                    /* ====================================
-                       NORMAL MODE
-                    ==================================== */
-
-                    <div className="flex items-center gap-3">
-
-                      {/* CHECKBOX */}
-
-                      <button
-                        type="button"
-                        onClick={() => toggleTodo(todo)}
-                        className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border-2 text-xs font-bold transition ${
-                          todo.completed
-                            ? "border-blue-500 bg-blue-500 text-white"
-                            : "border-blue-200 bg-white text-transparent hover:border-blue-400"
-                        }`}
-                        aria-label={
-                          todo.completed
-                            ? "Mark as incomplete"
-                            : "Mark as complete"
-                        }
-                      >
-                        ✓
-                      </button>
-
-                      {/* TITLE */}
-
-                      <button
-                        type="button"
-                        onClick={() => toggleTodo(todo)}
-                        className="min-w-0 flex-1 text-left"
-                      >
-
-                        <span
-                          className={`block text-sm font-medium transition ${
-                            todo.completed
-                              ? "text-slate-400 line-through"
-                              : "text-slate-700"
-                          }`}
-                        >
-                          {todo.title}
-                        </span>
-
-                        {todo.completed &&
-                          todo.completed_at && (
-                            <span className="mt-0.5 block text-[10px] text-blue-400">
-                              Completed{" "}
-                              {formatCompletedAt(
-                                todo.completed_at
-                              )}
-                            </span>
-                          )}
-
-                      </button>
-
-                      {/* ACTIONS */}
-
-                      <div className="flex shrink-0 items-center gap-1">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={editingTitle}
+                          onChange={(event) =>
+                            setEditingTitle(
+                              event.target.value
+                            )
+                          }
+                          onKeyDown={(event) =>
+                            handleEditKeyDown(
+                              event,
+                              todo.id
+                            )
+                          }
+                          autoFocus
+                          className="min-w-0 flex-1 rounded-xl border border-blue-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                        />
 
                         <button
                           type="button"
-                          onClick={() => startEditing(todo)}
-                          className="flex h-8 w-8 items-center justify-center rounded-xl text-sm text-slate-300 transition hover:bg-blue-50 hover:text-blue-500"
-                          aria-label={`Edit ${todo.title}`}
+                          onClick={() =>
+                            saveEdit(todo.id)
+                          }
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-500 text-sm font-bold text-white transition hover:bg-blue-600"
+                          aria-label="Save edit"
                         >
-                          ✏️
+                          ✓
                         </button>
 
                         <button
                           type="button"
-                          onClick={() => confirmDelete(todo.id)}
-                          className="flex h-8 w-8 items-center justify-center rounded-xl text-sm text-slate-300 transition hover:bg-red-50 hover:text-red-400"
-                          aria-label={`Delete ${todo.title}`}
+                          onClick={cancelEditing}
+                          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-bold text-slate-500 transition hover:bg-slate-200"
+                          aria-label="Cancel edit"
                         >
-                          🗑️
+                          ×
                         </button>
-
                       </div>
+                    ) : (
+                      /* ====================================
+                         NORMAL MODE
+                      ==================================== */
 
-                    </div>
+                      <div className="flex items-center gap-3">
+                        {/* CHECKBOX */}
 
-                  )}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            toggleTodo(todo)
+                          }
+                          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border-2 text-xs font-bold transition ${
+                            todo.completed
+                              ? "border-blue-500 bg-blue-500 text-white"
+                              : "border-blue-200 bg-white text-transparent hover:border-blue-400"
+                          }`}
+                          aria-label={
+                            todo.completed
+                              ? "Mark as incomplete"
+                              : "Mark as complete"
+                          }
+                        >
+                          ✓
+                        </button>
 
+                        {/* TITLE */}
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            toggleTodo(todo)
+                          }
+                          className="min-w-0 flex-1 text-left"
+                        >
+                          <span
+                            className={`block break-words text-sm font-medium transition ${
+                              todo.completed
+                                ? "text-slate-400 line-through"
+                                : "text-slate-700"
+                            }`}
+                          >
+                            {todo.title}
+                          </span>
+
+                          {todo.completed &&
+                            todo.completed_at && (
+                              <span className="mt-0.5 block text-[10px] text-blue-400">
+                                Completed{" "}
+                                {formatCompletedAt(
+                                  todo.completed_at
+                                )}
+                              </span>
+                            )}
+                        </button>
+
+                        {/* ACTIONS */}
+
+                        <div className="flex shrink-0 items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              startEditing(todo)
+                            }
+                            className="flex h-8 w-8 items-center justify-center rounded-xl text-sm text-slate-300 transition hover:bg-blue-50 hover:text-blue-500"
+                            aria-label={`Edit ${todo.title}`}
+                          >
+                            ✏️
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              confirmDelete(todo.id)
+                            }
+                            className="flex h-8 w-8 items-center justify-center rounded-xl text-sm text-slate-300 transition hover:bg-red-50 hover:text-red-400"
+                            aria-label={`Delete ${todo.title}`}
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              /* ============================================
+                 EMPTY STATE
+              ============================================ */
+
+              <div className="py-8 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-2xl">
+                  📝
                 </div>
 
-              ))}
+                <h2 className="text-lg font-bold text-blue-950">
+                  No todos yet
+                </h2>
 
-            </div>
+                <p className="mx-auto mt-1 max-w-xs text-sm text-slate-500">
+                  Add something you want to accomplish
+                  today.
+                </p>
 
-          ) : (
-
-            /* ============================================
-               EMPTY STATE
-            ============================================ */
-
-            <div className="py-8 text-center">
-
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-2xl">
-                📝
+                <p className="mt-3 text-xs text-blue-400">
+                  A fresh day is a fresh start. 💙
+                </p>
               </div>
-
-              <h2 className="text-lg font-bold text-blue-950">
-                No todos yet
-              </h2>
-
-              <p className="mx-auto mt-1 max-w-xs text-sm text-slate-500">
-                Add something you want to accomplish today.
-              </p>
-
-              <p className="mt-3 text-xs text-blue-400">
-                A fresh day is a fresh start. 💙
-              </p>
-
-            </div>
-
-          )}
-
+            )}
+          </div>
         </section>
 
         {/* ============================================
             FOOTER
         ============================================ */}
 
-        <footer className="mt-3 text-center text-[11px] text-slate-400 sm:text-xs">
-          Made with <span className="text-blue-500">♥</span> for Jaynee
+        <footer className="shrink-0 pt-2 text-center text-[11px] text-slate-400 sm:text-xs">
+          Made with{" "}
+          <span className="text-blue-500">♥</span> for
+          Jaynee
         </footer>
-
       </div>
 
       {/* ================================================
@@ -757,9 +988,7 @@ const goToDate = (offset) => {
 
       {deleteId && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-blue-950/20 px-4 backdrop-blur-sm">
-
           <div className="w-full max-w-sm rounded-3xl border border-blue-100 bg-white p-5 shadow-2xl">
-
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-2xl">
               🗑️
             </div>
@@ -779,7 +1008,6 @@ const goToDate = (offset) => {
             )}
 
             <div className="mt-5 flex gap-2">
-
               <button
                 type="button"
                 onClick={cancelDelete}
@@ -795,14 +1023,10 @@ const goToDate = (offset) => {
               >
                 Delete
               </button>
-
             </div>
-
           </div>
-
         </div>
       )}
-
     </main>
   );
 }

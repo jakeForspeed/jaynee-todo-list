@@ -1,1 +1,298 @@
 @import "tailwindcss";
+
+:root {
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+/* ============================================
+   WELCOME ANIMATION
+============================================ */
+
+@keyframes welcomeFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.welcome-fade {
+  animation: welcomeFade 0.7s ease-out;
+}
+
+/* ============================================
+   FLOATING DECORATIONS
+============================================ */
+
+@keyframes floatingUp {
+  0% {
+    opacity: 0;
+    transform:
+      translate3d(0, 40px, 0)
+      rotate(0deg)
+      scale(0.75);
+  }
+
+  8% {
+    opacity: 0.85;
+  }
+
+  25% {
+    transform:
+      translate3d(25px, -20vh, 0)
+      rotate(12deg)
+      scale(1);
+  }
+
+  50% {
+    transform:
+      translate3d(-20px, -45vh, 0)
+      rotate(-10deg)
+      scale(1.05);
+  }
+
+  75% {
+    transform:
+      translate3d(30px, -70vh, 0)
+      rotate(12deg)
+      scale(0.95);
+  }
+
+  92% {
+    opacity: 0.55;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate3d(-10px, -110vh, 0)
+      rotate(-8deg)
+      scale(0.8);
+  }
+}
+
+@keyframes floatingUpReverse {
+  0% {
+    opacity: 0;
+    transform:
+      translate3d(0, 40px, 0)
+      rotate(0deg)
+      scale(0.75);
+  }
+
+  8% {
+    opacity: 0.8;
+  }
+
+  25% {
+    transform:
+      translate3d(-25px, -20vh, 0)
+      rotate(-12deg)
+      scale(1);
+  }
+
+  50% {
+    transform:
+      translate3d(18px, -45vh, 0)
+      rotate(10deg)
+      scale(1.05);
+  }
+
+  75% {
+    transform:
+      translate3d(-28px, -70vh, 0)
+      rotate(-10deg)
+      scale(0.95);
+  }
+
+  92% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate3d(10px, -110vh, 0)
+      rotate(8deg)
+      scale(0.8);
+  }
+}
+
+/* ============================================
+   SPARKLES
+============================================ */
+
+@keyframes sparkleFloat {
+  0% {
+    opacity: 0;
+    transform:
+      translate3d(0, 30px, 0)
+      scale(0.5)
+      rotate(0deg);
+  }
+
+  10% {
+    opacity: 0.8;
+  }
+
+  30% {
+    transform:
+      translate3d(15px, -25vh, 0)
+      scale(1.15)
+      rotate(90deg);
+  }
+
+  55% {
+    transform:
+      translate3d(-12px, -50vh, 0)
+      scale(0.8)
+      rotate(180deg);
+  }
+
+  80% {
+    opacity: 0.5;
+
+    transform:
+      translate3d(15px, -80vh, 0)
+      scale(1.1)
+      rotate(270deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate3d(-5px, -110vh, 0)
+      scale(0.5)
+      rotate(360deg);
+  }
+}
+
+/* ============================================
+   FLOATING OBJECT BASE
+============================================ */
+
+.floating-decoration {
+  position: fixed;
+
+  bottom: -50px;
+
+  pointer-events: none;
+  user-select: none;
+
+  z-index: 1;
+
+  line-height: 1;
+
+  will-change: transform, opacity;
+
+  /* Makes the decorations easier to see */
+  text-shadow:
+    0 2px 8px rgba(96, 165, 250, 0.18);
+}
+
+/* ============================================
+   FLOWERS
+============================================ */
+
+.floating-flower {
+  color: rgba(99, 102, 241, 0.68);
+
+  animation-name: floatingUp;
+
+  animation-timing-function: ease-in-out;
+
+  animation-iteration-count: infinite;
+}
+
+.floating-flower-soft {
+  color: rgba(129, 140, 248, 0.58);
+
+  animation-name: floatingUpReverse;
+
+  animation-timing-function: ease-in-out;
+
+  animation-iteration-count: infinite;
+}
+
+/* ============================================
+   HEARTS
+============================================ */
+
+.floating-heart {
+  color: rgba(59, 130, 246, 0.58);
+
+  animation-name: floatingUpReverse;
+
+  animation-timing-function: ease-in-out;
+
+  animation-iteration-count: infinite;
+}
+
+.floating-heart-soft {
+  color: rgba(96, 165, 250, 0.48);
+
+  animation-name: floatingUp;
+
+  animation-timing-function: ease-in-out;
+
+  animation-iteration-count: infinite;
+}
+
+/* ============================================
+   SPARKLES
+============================================ */
+
+.floating-sparkle {
+  color: rgba(14, 165, 233, 0.72);
+
+  animation-name: sparkleFloat;
+
+  animation-timing-function: ease-in-out;
+
+  animation-iteration-count: infinite;
+}
+
+/* ============================================
+   MOBILE
+============================================ */
+
+@media (max-width: 640px) {
+  .floating-decoration {
+    text-shadow:
+      0 2px 6px rgba(96, 165, 250, 0.15);
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-fade,
+  .floating-decoration {
+    animation: none !important;
+  }
+}

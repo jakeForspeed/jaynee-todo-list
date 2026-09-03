@@ -28,11 +28,9 @@ function CalendarPage() {
     return "evening";
   };
 
-  const [timeOfDay, setTimeOfDay] = useState(getTimeOfDay());
-
-  // ============================================
-  // LIVE TIME CHECK
-  // ============================================
+  const [timeOfDay, setTimeOfDay] = useState(
+    getTimeOfDay()
+  );
 
   useEffect(() => {
     const updateTimeOfDay = () => {
@@ -77,14 +75,15 @@ function CalendarPage() {
 
     return {
       greeting: "Good evening, Jaynee! 🌙",
-      message: "Let's see what you accomplished today.",
+      message:
+        "Let's see what you accomplished today.",
     };
   };
 
   const welcome = getWelcomeMessage();
 
   // ============================================
-  // TIME-BASED THEME
+  // THEMES
   // ============================================
 
   const backgroundStyles = {
@@ -143,7 +142,7 @@ function CalendarPage() {
   const theme = backgroundStyles[timeOfDay];
 
   // ============================================
-  // RANDOM DECORATIONS
+  // FLOATING DECORATIONS
   // ============================================
 
   const decorations = useMemo(() => {
@@ -187,12 +186,9 @@ function CalendarPage() {
             )
           ],
         left: Math.random() * 100,
-        size:
-          18 + Math.random() * 20,
-        duration:
-          10 + Math.random() * 9,
-        delay:
-          Math.random() * -18,
+        size: 18 + Math.random() * 20,
+        duration: 10 + Math.random() * 9,
+        delay: Math.random() * -18,
       });
     }
 
@@ -210,12 +206,9 @@ function CalendarPage() {
             )
           ],
         left: Math.random() * 100,
-        size:
-          15 + Math.random() * 18,
-        duration:
-          9 + Math.random() * 9,
-        delay:
-          Math.random() * -15,
+        size: 15 + Math.random() * 18,
+        duration: 9 + Math.random() * 9,
+        delay: Math.random() * -15,
       });
     }
 
@@ -230,12 +223,9 @@ function CalendarPage() {
             )
           ],
         left: Math.random() * 100,
-        size:
-          10 + Math.random() * 12,
-        duration:
-          7 + Math.random() * 8,
-        delay:
-          Math.random() * -15,
+        size: 10 + Math.random() * 12,
+        duration: 7 + Math.random() * 8,
+        delay: Math.random() * -15,
       });
     }
 
@@ -270,7 +260,7 @@ function CalendarPage() {
   };
 
   // ============================================
-  // FETCH TODO DATES
+  // FETCH TODOS
   // ============================================
 
   useEffect(() => {
@@ -291,7 +281,6 @@ function CalendarPage() {
       );
 
       setLoading(false);
-
       return;
     }
 
@@ -313,7 +302,6 @@ function CalendarPage() {
     });
 
     setTodoDates(dateMap);
-
     setLoading(false);
   };
 
@@ -326,10 +314,6 @@ function CalendarPage() {
 
     setSelectedDate(date);
   };
-
-  // ============================================
-  // SELECTED TODO INFO
-  // ============================================
 
   const selectedDateString =
     getDateString(selectedDate);
@@ -345,26 +329,33 @@ function CalendarPage() {
     <main
       className={`
         relative
-        h-screen
-        min-h-0
-        overflow-hidden
-        px-3
-        py-2
+        min-h-screen
+        overflow-x-hidden
+        px-4
+        py-6
         transition-all
         duration-[2000ms]
         ease-in-out
-        sm:px-4
-        sm:py-3
+        sm:px-6
+        sm:py-8
+        md:px-8
+        md:py-10
         ${theme.page}
       `}
     >
       {/* ============================================
-          FLOATING BACKGROUND
+          FLOATING DECORATIONS
       ============================================ */}
 
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
+        className="
+          pointer-events-none
+          fixed
+          inset-0
+          z-0
+          overflow-hidden
+        "
       >
         {decorations.map((item) => {
           let decorationClass =
@@ -416,8 +407,17 @@ function CalendarPage() {
           MAIN CONTENT
       ============================================ */}
 
-      <div className="relative z-10 mx-auto flex h-full min-h-0 w-full max-w-lg flex-col">
-
+      <div
+        className="
+          relative
+          z-10
+          mx-auto
+          flex
+          w-full
+          max-w-2xl
+          flex-col
+        "
+      >
         {/* ============================================
             WELCOME
         ============================================ */}
@@ -426,32 +426,30 @@ function CalendarPage() {
           key={timeOfDay}
           className="
             welcome-fade
-            mb-2
-            shrink-0
-            sm:mb-3
+            mb-7
+            sm:mb-8
+            md:mb-10
           "
         >
-          <div className="flex items-center gap-2.5 sm:gap-3">
-
-            {/* LOGO */}
-
+          <div className="flex items-center gap-4 sm:gap-5">
             <div
               className={`
                 flex
-                h-9
-                w-9
+                h-14
+                w-14
                 shrink-0
                 items-center
                 justify-center
                 rounded-2xl
-                text-base
+                text-2xl
                 text-white
                 shadow-lg
                 transition-all
                 duration-[1500ms]
-                sm:h-11
-                sm:w-11
-                sm:text-lg
+                sm:h-16
+                sm:w-16
+                sm:rounded-3xl
+                sm:text-3xl
                 ${theme.logo}
               `}
             >
@@ -460,17 +458,15 @@ function CalendarPage() {
               </span>
             </div>
 
-            {/* GREETING */}
-
             <div className="min-w-0">
-
               <h1
                 className="
-                  text-base
+                  text-2xl
                   font-bold
                   tracking-tight
                   text-blue-950
-                  sm:text-2xl
+                  sm:text-3xl
+                  md:text-4xl
                 "
               >
                 {welcome.greeting}
@@ -478,15 +474,15 @@ function CalendarPage() {
 
               <p
                 className="
-                  mt-0.5
-                  text-[11px]
+                  mt-1.5
+                  text-sm
                   text-slate-500
-                  sm:text-sm
+                  sm:text-base
+                  md:text-lg
                 "
               >
                 {welcome.message}
               </p>
-
             </div>
           </div>
         </header>
@@ -497,29 +493,27 @@ function CalendarPage() {
 
         <section
           className={`
-            shrink-0
-            rounded-3xl
+            rounded-[2rem]
             border
-            p-3
-            shadow-xl
+            p-6
+            shadow-2xl
             backdrop-blur-sm
             transition-all
             duration-[2000ms]
-            sm:p-4
+            sm:rounded-[2.25rem]
+            sm:p-8
+            md:p-10
             ${theme.card}
           `}
         >
-
-          {/* TITLE */}
-
-          <div className="mb-1.5 sm:mb-2">
-
+          <div className="mb-6 sm:mb-8">
             <h2
               className="
-                text-sm
+                text-2xl
                 font-bold
                 text-blue-950
-                sm:text-lg
+                sm:text-3xl
+                md:text-4xl
               "
             >
               My Calendar
@@ -527,15 +521,15 @@ function CalendarPage() {
 
             <p
               className="
-                mt-0.5
-                text-[11px]
+                mt-1.5
+                text-sm
                 text-slate-500
-                sm:text-sm
+                sm:text-base
+                md:text-lg
               "
             >
               Select a date to view your todos.
             </p>
-
           </div>
 
           {/* CALENDAR */}
@@ -552,50 +546,62 @@ function CalendarPage() {
 
           <div
             className="
-              mt-1.5
+              mt-7
               flex
+              flex-wrap
               items-center
               justify-center
-              gap-3
-              text-[9px]
+              gap-5
+              text-xs
               text-slate-400
-              sm:mt-2
-              sm:gap-4
-              sm:text-xs
+              sm:mt-8
+              sm:gap-8
+              sm:text-sm
+              md:text-base
             "
           >
+            <div className="flex items-center gap-2.5">
+              <span
+                className="
+                  h-2.5
+                  w-2.5
+                  rounded-full
+                  bg-blue-400
+                  sm:h-3
+                  sm:w-3
+                "
+              />
 
-            <div className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-              <span>Has todos</span>
+              <span>
+                Has todos
+              </span>
             </div>
 
-            <div className="flex items-center gap-1.5">
-
+            <div className="flex items-center gap-2.5">
               <span
                 className="
                   flex
-                  h-3
-                  w-3
+                  h-5
+                  w-5
                   items-center
                   justify-center
                   rounded-full
                   bg-blue-500
-                  text-[7px]
+                  text-[10px]
                   font-bold
                   text-white
-                  sm:h-3.5
-                  sm:w-3.5
-                  sm:text-[8px]
+                  sm:h-6
+                  sm:w-6
+                  sm:text-xs
                 "
               >
                 ✓
               </span>
 
-              <span>Completed</span>
-
+              <span>
+                Completed
+              </span>
             </div>
-
           </div>
 
           {/* ============================================
@@ -605,51 +611,49 @@ function CalendarPage() {
           {selectedDate && (
             <div
               className={`
-                mt-1.5
+                mt-6
                 flex
                 items-center
-                gap-2
-                rounded-2xl
+                gap-4
+                rounded-3xl
                 border
-                p-2
+                p-4
                 transition-all
                 duration-[1500ms]
-                sm:mt-2
-                sm:gap-3
-                sm:p-2.5
+                sm:mt-7
+                sm:gap-5
+                sm:p-5
                 ${theme.selected}
               `}
             >
-
               <div
                 className="
                   flex
-                  h-7
-                  w-7
+                  h-12
+                  w-12
                   shrink-0
                   items-center
                   justify-center
-                  rounded-xl
+                  rounded-2xl
                   bg-white
-                  text-xs
+                  text-xl
                   shadow-sm
-                  sm:h-9
-                  sm:w-9
-                  sm:text-base
+                  sm:h-14
+                  sm:w-14
+                  sm:text-2xl
                 "
               >
                 📅
               </div>
 
               <div className="min-w-0 flex-1">
-
                 <span
                   className="
                     block
-                    text-[9px]
+                    text-xs
                     font-medium
                     text-slate-500
-                    sm:text-xs
+                    sm:text-sm
                   "
                 >
                   Selected date
@@ -657,12 +661,14 @@ function CalendarPage() {
 
                 <strong
                   className="
+                    mt-0.5
                     block
                     truncate
-                    text-[11px]
+                    text-base
                     font-semibold
                     text-blue-800
-                    sm:text-sm
+                    sm:text-lg
+                    md:text-xl
                   "
                 >
                   {formatSelectedDate(
@@ -673,11 +679,11 @@ function CalendarPage() {
                 {selectedTodoInfo && (
                   <span
                     className="
-                      mt-0.5
+                      mt-1
                       block
-                      text-[9px]
+                      text-sm
                       text-blue-400
-                      sm:text-xs
+                      sm:text-base
                     "
                   >
                     {selectedTodoInfo.total}{" "}
@@ -686,7 +692,6 @@ function CalendarPage() {
                       : "todos"}
                   </span>
                 )}
-
               </div>
             </div>
           )}
@@ -698,10 +703,11 @@ function CalendarPage() {
           {loading && (
             <p
               className="
-                mt-1
+                mt-3
                 text-center
-                text-[9px]
+                text-sm
                 text-slate-400
+                sm:text-base
               "
             >
               Loading your calendar...
@@ -709,7 +715,7 @@ function CalendarPage() {
           )}
 
           {/* ============================================
-              VIEW TODOS
+              VIEW TODOS BUTTON
           ============================================ */}
 
           <button
@@ -720,37 +726,35 @@ function CalendarPage() {
               )
             }
             className={`
-              mt-1.5
+              mt-6
               flex
               w-full
               items-center
               justify-center
-              gap-2
-              rounded-2xl
-              px-4
-              py-2
-              text-xs
+              gap-3
+              rounded-3xl
+              px-6
+              py-4
+              text-lg
               font-bold
               text-white
-              shadow-lg
+              shadow-xl
               transition-all
-              duration-[1500ms]
-              hover:-translate-y-0.5
+              duration-300
+              hover:-translate-y-1
               active:translate-y-0
-              sm:mt-2
-              sm:px-5
-              sm:py-3
-              sm:text-sm
+              sm:mt-7
+              sm:py-5
+              sm:text-xl
               ${theme.button}
             `}
           >
             View Todos
 
-            <span className="text-base sm:text-lg">
+            <span className="text-2xl sm:text-3xl">
               →
             </span>
           </button>
-
         </section>
 
         {/* ============================================
@@ -759,14 +763,12 @@ function CalendarPage() {
 
         <footer
           className="
-            shrink-0
-            pb-0.5
-            pt-1.5
+            py-7
             text-center
-            text-[10px]
+            text-sm
             text-slate-400
-            sm:pt-2
-            sm:text-xs
+            sm:py-8
+            sm:text-base
           "
         >
           Made with{" "}
@@ -775,7 +777,6 @@ function CalendarPage() {
           </span>{" "}
           for Jaynee
         </footer>
-
       </div>
     </main>
   );

@@ -6,10 +6,6 @@ function Calendar({
   onSelectDate,
   todoDates = {},
 }) {
-  // ============================================
-  // CREATE DATE ARRAYS FOR DAY PICKER
-  // ============================================
-
   const todoDays = [];
   const completedDays = [];
 
@@ -43,66 +39,45 @@ function Calendar({
           allCompleted: "all-completed",
         }}
         classNames={{
-          // ============================================
-          // CALENDAR CONTAINER
-          // ============================================
-
           root: "w-full",
-
           months: "w-full",
-
           month: "w-full",
 
-          // ============================================
-          // MONTH HEADER
-          // ============================================
-
           month_caption:
-            "flex items-center justify-between mb-1 px-1",
+            "mb-6 flex items-center justify-between px-1 sm:mb-7",
 
           caption_label:
-            "calendar-caption text-sm font-bold text-blue-900",
+            "text-2xl font-bold text-blue-950 sm:text-3xl md:text-4xl",
 
           nav:
-            "flex items-center gap-1",
+            "flex items-center gap-2",
 
           button_previous:
-            "calendar-nav flex h-8 w-8 items-center justify-center rounded-xl text-blue-500 transition hover:bg-blue-50 sm:h-9 sm:w-9",
+            "calendar-nav flex h-12 w-12 items-center justify-center rounded-2xl text-blue-500 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 active:scale-95 sm:h-14 sm:w-14",
 
           button_next:
-            "calendar-nav flex h-8 w-8 items-center justify-center rounded-xl text-blue-500 transition hover:bg-blue-50 sm:h-9 sm:w-9",
+            "calendar-nav flex h-12 w-12 items-center justify-center rounded-2xl text-blue-500 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 active:scale-95 sm:h-14 sm:w-14",
 
-          // ============================================
-          // CALENDAR GRID
-          // ============================================
-
-          month_grid: "w-full",
+          month_grid:
+            "w-full",
 
           weekdays:
-            "grid grid-cols-7 mb-0.5",
+            "mb-4 grid grid-cols-7",
 
           weekday:
-            "calendar-weekday text-center text-[9px] font-semibold text-slate-400 sm:text-[10px] md:text-xs",
+            "calendar-weekday text-center text-xs font-bold uppercase tracking-wide text-slate-400 sm:text-sm md:text-base",
 
           week:
             "grid grid-cols-7",
 
           day:
-            "calendar-day relative flex items-center justify-center",
-
-          // ============================================
-          // DAY BUTTON
-          // ============================================
+            "relative flex items-center justify-center py-1.5 sm:py-2 md:py-2.5",
 
           day_button:
-            "calendar-day-button relative flex h-8 w-8 items-center justify-center rounded-xl text-[11px] font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-600 sm:h-9 sm:w-9 sm:text-xs md:h-10 md:w-10 md:text-sm",
-
-          // ============================================
-          // SELECTED / TODAY / OUTSIDE
-          // ============================================
+            "calendar-day-button flex flex-col items-center justify-center rounded-2xl text-sm font-semibold text-slate-700 transition-all duration-200 hover:bg-blue-50 hover:text-blue-600 active:scale-95 sm:text-base md:text-lg",
 
           selected:
-            "rounded-xl bg-blue-500 text-white shadow-md shadow-blue-200",
+            "rounded-2xl bg-blue-500 text-white shadow-lg shadow-blue-200 hover:bg-blue-500 hover:text-white",
 
           today:
             "font-bold text-blue-600",
@@ -133,23 +108,50 @@ function Calendar({
             return (
               <button
                 {...props}
-                className={`${props.className || ""} relative`}
+                className={`${props.className || ""} calendar-day-button`}
               >
-                {day.date.getDate()}
+                {/* DATE NUMBER */}
+                <span className="leading-none">
+                  {day.date.getDate()}
+                </span>
 
-                {/* ============================================
-                    TODO INDICATOR
-                ============================================ */}
-
+                {/* STATUS INDICATOR */}
                 {hasTodos && (
                   <span
-                    className={`calendar-indicator absolute bottom-0.5 left-1/2 flex -translate-x-1/2 items-center justify-center ${
-                      allCompleted
-                        ? "h-3 w-3 rounded-full bg-white text-[7px] font-bold text-blue-500 sm:h-3.5 sm:w-3.5 sm:text-[8px]"
-                        : "h-1.5 w-1.5 rounded-full bg-blue-300"
-                    }`}
+                    aria-hidden="true"
+                    className={`
+                      mt-1.5
+                      flex
+                      shrink-0
+                      items-center
+                      justify-center
+                      ${
+                        allCompleted
+                          ? `
+                            h-4
+                            w-4
+                            rounded-full
+                            bg-white
+                            text-[9px]
+                            font-black
+                            leading-none
+                            text-blue-500
+                            sm:h-5
+                            sm:w-5
+                            sm:text-[10px]
+                          `
+                          : `
+                            h-2
+                            w-2
+                            rounded-full
+                            bg-blue-300
+                            sm:h-2.5
+                            sm:w-2.5
+                          `
+                      }
+                    `}
                   >
-                    {allCompleted ? "✓" : ""}
+                    {allCompleted && "✓"}
                   </span>
                 )}
               </button>

@@ -1,4 +1,12 @@
+/* ============================================
+   TAILWIND
+============================================ */
+
 @import "tailwindcss";
+
+/* ============================================
+   ROOT
+============================================ */
 
 :root {
   font-family:
@@ -11,6 +19,10 @@
     sans-serif;
 }
 
+/* ============================================
+   PAGE RESET
+============================================ */
+
 html,
 body,
 #root {
@@ -18,9 +30,14 @@ body,
   min-height: 100%;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 /* ============================================
@@ -174,7 +191,6 @@ body {
 
   80% {
     opacity: 0.5;
-
     transform:
       translate3d(15px, -80vh, 0)
       scale(1.1)
@@ -196,19 +212,15 @@ body {
 
 .floating-decoration {
   position: fixed;
-
   bottom: -50px;
-
   pointer-events: none;
   user-select: none;
-
   z-index: 1;
-
   line-height: 1;
+  will-change:
+    transform,
+    opacity;
 
-  will-change: transform, opacity;
-
-  /* Makes the decorations easier to see */
   text-shadow:
     0 2px 8px rgba(96, 165, 250, 0.18);
 }
@@ -219,21 +231,15 @@ body {
 
 .floating-flower {
   color: rgba(99, 102, 241, 0.68);
-
   animation-name: floatingUp;
-
   animation-timing-function: ease-in-out;
-
   animation-iteration-count: infinite;
 }
 
 .floating-flower-soft {
   color: rgba(129, 140, 248, 0.58);
-
   animation-name: floatingUpReverse;
-
   animation-timing-function: ease-in-out;
-
   animation-iteration-count: infinite;
 }
 
@@ -243,21 +249,15 @@ body {
 
 .floating-heart {
   color: rgba(59, 130, 246, 0.58);
-
   animation-name: floatingUpReverse;
-
   animation-timing-function: ease-in-out;
-
   animation-iteration-count: infinite;
 }
 
 .floating-heart-soft {
   color: rgba(96, 165, 250, 0.48);
-
   animation-name: floatingUp;
-
   animation-timing-function: ease-in-out;
-
   animation-iteration-count: infinite;
 }
 
@@ -267,16 +267,97 @@ body {
 
 .floating-sparkle {
   color: rgba(14, 165, 233, 0.72);
-
   animation-name: sparkleFloat;
-
   animation-timing-function: ease-in-out;
-
   animation-iteration-count: infinite;
 }
 
 /* ============================================
-   MOBILE
+   XXL CALENDAR
+============================================ */
+
+.calendar-responsive {
+  width: 100%;
+}
+
+/* Base / phone */
+
+.calendar-responsive .calendar-day-button {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.calendar-responsive .calendar-nav {
+  width: 3rem;
+  height: 3rem;
+}
+
+/* ============================================
+   TABLET / DESKTOP
+============================================ */
+
+@media (min-width: 640px) {
+  .calendar-responsive .calendar-day-button {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .calendar-responsive .calendar-nav {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
+
+/* ============================================
+   LARGE DESKTOP
+============================================ */
+
+@media (min-width: 1024px) {
+  .calendar-responsive .calendar-day-button {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .calendar-responsive .calendar-nav {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+/* ============================================
+   VERY SMALL PHONES
+============================================ */
+
+@media (max-width: 380px) {
+  .calendar-responsive .calendar-day-button {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .calendar-responsive .calendar-nav {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .calendar-responsive .calendar-day-button {
+    width: 2.7rem;
+    height: 2.7rem;
+  }
+
+  .calendar-responsive .calendar-nav {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .calendar-responsive .calendar-weekday {
+    font-size: 0.6rem;
+  }
+}
+
+/* ============================================
+   MOBILE DECORATIONS
 ============================================ */
 
 @media (max-width: 640px) {
@@ -294,222 +375,5 @@ body {
   .welcome-fade,
   .floating-decoration {
     animation: none !important;
-  }
-}
-
-/* ============================================
-   RESPONSIVE CALENDAR
-============================================ */
-
-.calendar-responsive {
-  width: 100%;
-}
-
-/* ============================================
-   VERY SMALL / SHORT SCREENS
-   Example:
-   1366x768
-   1280x720
-   small laptops
-============================================ */
-
-@media (max-height: 800px) {
-  .calendar-responsive .calendar-caption {
-    font-size: 0.875rem;
-  }
-
-  .calendar-responsive .calendar-nav {
-    width: 2rem;
-    height: 2rem;
-  }
-
-  .calendar-responsive .calendar-day-button {
-    width: 2rem;
-    height: 2rem;
-  }
-
-  .calendar-responsive .calendar-day {
-    padding-top: 0;
-    padding-bottom: 0;
-  }
-}
-
-/* ============================================
-   EXTRA SHORT SCREENS
-   Example:
-   1366x768 with scaling
-   1280x720
-   small laptop displays
-============================================ */
-
-@media (max-height: 720px) {
-  .calendar-responsive .calendar-caption {
-    font-size: 0.8125rem;
-  }
-
-  .calendar-responsive .calendar-nav {
-    width: 1.875rem;
-    height: 1.875rem;
-  }
-
-  .calendar-responsive .calendar-day-button {
-    width: 1.875rem;
-    height: 1.875rem;
-    font-size: 0.6875rem;
-  }
-
-  .calendar-responsive .calendar-weekday {
-    font-size: 0.5625rem;
-  }
-
-  .calendar-responsive .calendar-indicator {
-    bottom: 1px;
-  }
-}
-
-/* ============================================
-   EXTREMELY SHORT SCREENS
-   Example:
-   1024x600
-   very small laptops
-============================================ */
-
-@media (max-height: 650px) {
-  .calendar-responsive .calendar-nav {
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-
-  .calendar-responsive .calendar-day-button {
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: 0.625rem;
-    font-size: 0.625rem;
-  }
-
-  .calendar-responsive .calendar-weekday {
-    font-size: 0.5rem;
-  }
-}
-
-/* ============================================
-   SMALL MOBILE WIDTH
-============================================ */
-
-@media (max-width: 380px) {
-  .calendar-responsive .calendar-day-button {
-    width: 1.875rem;
-    height: 1.875rem;
-  }
-
-  .calendar-responsive .calendar-nav {
-    width: 1.875rem;
-    height: 1.875rem;
-  }
-}
-
-/* ============================================
-   VERY SMALL MOBILE
-============================================ */
-
-@media (max-width: 320px) {
-  .calendar-responsive .calendar-day-button {
-    width: 1.7rem;
-    height: 1.7rem;
-    font-size: 0.625rem;
-  }
-
-  .calendar-responsive .calendar-nav {
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-
-  .calendar-responsive .calendar-weekday {
-    font-size: 0.5rem;
-  }
-}
-
-/* ============================================
-   LARGE SCREENS
-============================================ */
-
-@media (min-width: 768px) and (min-height: 850px) {
-  .calendar-responsive .calendar-day-button {
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-
-  .calendar-responsive .calendar-nav {
-    width: 2.25rem;
-    height: 2.25rem;
-  }
-}
-
-
-/* ============================================
-   CALENDAR PAGE HEIGHT RESPONSIVENESS
-============================================ */
-
-/*
-  Normal desktop / laptop
-  Keeps the current comfortable design.
-*/
-
-/* ============================================
-   SHORT SCREEN
-   800px and below
-============================================ */
-
-@media (max-height: 800px) {
-  .calendar-responsive {
-    transform: scale(0.98);
-    transform-origin: top center;
-  }
-}
-
-/* ============================================
-   SMALL SCREEN
-   720px and below
-============================================ */
-
-@media (max-height: 720px) {
-  .calendar-responsive {
-    transform: scale(0.96);
-    transform-origin: top center;
-  }
-}
-
-/* ============================================
-   EXTRA SMALL SCREEN
-   650px and below
-============================================ */
-
-@media (max-height: 650px) {
-  .calendar-responsive {
-    transform: scale(0.94);
-    transform-origin: top center;
-  }
-}
-
-/* ============================================
-   VERY SMALL SCREEN
-   600px and below
-============================================ */
-
-@media (max-height: 600px) {
-  .calendar-responsive {
-    transform: scale(0.92);
-    transform-origin: top center;
-  }
-}
-
-/* ============================================
-   MOBILE LANDSCAPE / VERY SHORT DISPLAY
-============================================ */
-
-@media (max-height: 500px) {
-  .calendar-responsive {
-    transform: scale(0.88);
-    transform-origin: top center;
   }
 }

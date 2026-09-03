@@ -296,3 +296,220 @@ body {
     animation: none !important;
   }
 }
+
+/* ============================================
+   RESPONSIVE CALENDAR
+============================================ */
+
+.calendar-responsive {
+  width: 100%;
+}
+
+/* ============================================
+   VERY SMALL / SHORT SCREENS
+   Example:
+   1366x768
+   1280x720
+   small laptops
+============================================ */
+
+@media (max-height: 800px) {
+  .calendar-responsive .calendar-caption {
+    font-size: 0.875rem;
+  }
+
+  .calendar-responsive .calendar-nav {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .calendar-responsive .calendar-day-button {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .calendar-responsive .calendar-day {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
+
+/* ============================================
+   EXTRA SHORT SCREENS
+   Example:
+   1366x768 with scaling
+   1280x720
+   small laptop displays
+============================================ */
+
+@media (max-height: 720px) {
+  .calendar-responsive .calendar-caption {
+    font-size: 0.8125rem;
+  }
+
+  .calendar-responsive .calendar-nav {
+    width: 1.875rem;
+    height: 1.875rem;
+  }
+
+  .calendar-responsive .calendar-day-button {
+    width: 1.875rem;
+    height: 1.875rem;
+    font-size: 0.6875rem;
+  }
+
+  .calendar-responsive .calendar-weekday {
+    font-size: 0.5625rem;
+  }
+
+  .calendar-responsive .calendar-indicator {
+    bottom: 1px;
+  }
+}
+
+/* ============================================
+   EXTREMELY SHORT SCREENS
+   Example:
+   1024x600
+   very small laptops
+============================================ */
+
+@media (max-height: 650px) {
+  .calendar-responsive .calendar-nav {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .calendar-responsive .calendar-day-button {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.625rem;
+    font-size: 0.625rem;
+  }
+
+  .calendar-responsive .calendar-weekday {
+    font-size: 0.5rem;
+  }
+}
+
+/* ============================================
+   SMALL MOBILE WIDTH
+============================================ */
+
+@media (max-width: 380px) {
+  .calendar-responsive .calendar-day-button {
+    width: 1.875rem;
+    height: 1.875rem;
+  }
+
+  .calendar-responsive .calendar-nav {
+    width: 1.875rem;
+    height: 1.875rem;
+  }
+}
+
+/* ============================================
+   VERY SMALL MOBILE
+============================================ */
+
+@media (max-width: 320px) {
+  .calendar-responsive .calendar-day-button {
+    width: 1.7rem;
+    height: 1.7rem;
+    font-size: 0.625rem;
+  }
+
+  .calendar-responsive .calendar-nav {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .calendar-responsive .calendar-weekday {
+    font-size: 0.5rem;
+  }
+}
+
+/* ============================================
+   LARGE SCREENS
+============================================ */
+
+@media (min-width: 768px) and (min-height: 850px) {
+  .calendar-responsive .calendar-day-button {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .calendar-responsive .calendar-nav {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+}
+
+
+/* ============================================
+   CALENDAR PAGE HEIGHT RESPONSIVENESS
+============================================ */
+
+/*
+  Normal desktop / laptop
+  Keeps the current comfortable design.
+*/
+
+/* ============================================
+   SHORT SCREEN
+   800px and below
+============================================ */
+
+@media (max-height: 800px) {
+  .calendar-responsive {
+    transform: scale(0.98);
+    transform-origin: top center;
+  }
+}
+
+/* ============================================
+   SMALL SCREEN
+   720px and below
+============================================ */
+
+@media (max-height: 720px) {
+  .calendar-responsive {
+    transform: scale(0.96);
+    transform-origin: top center;
+  }
+}
+
+/* ============================================
+   EXTRA SMALL SCREEN
+   650px and below
+============================================ */
+
+@media (max-height: 650px) {
+  .calendar-responsive {
+    transform: scale(0.94);
+    transform-origin: top center;
+  }
+}
+
+/* ============================================
+   VERY SMALL SCREEN
+   600px and below
+============================================ */
+
+@media (max-height: 600px) {
+  .calendar-responsive {
+    transform: scale(0.92);
+    transform-origin: top center;
+  }
+}
+
+/* ============================================
+   MOBILE LANDSCAPE / VERY SHORT DISPLAY
+============================================ */
+
+@media (max-height: 500px) {
+  .calendar-responsive {
+    transform: scale(0.88);
+    transform-origin: top center;
+  }
+}

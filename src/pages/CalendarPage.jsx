@@ -11,6 +11,35 @@ function CalendarPage() {
   const [loading, setLoading] = useState(true);
 
   // ============================================
+  // WELCOME MESSAGE
+  // ============================================
+
+  const getWelcomeMessage = () => {
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) {
+      return {
+        greeting: "Good morning, Jaynee! 🌅",
+        message: "Ready to make today a good one?",
+      };
+    }
+
+    if (hour >= 12 && hour < 18) {
+      return {
+        greeting: "Good afternoon, Jaynee! ☀️",
+        message: "How's your day going?",
+      };
+    }
+
+    return {
+      greeting: "Good evening, Jaynee! 🌙",
+      message: "Let's see what you accomplished today.",
+    };
+  };
+
+  const welcome = getWelcomeMessage();
+
+  // ============================================
   // DATE HELPERS
   // ============================================
 
@@ -91,8 +120,11 @@ function CalendarPage() {
     <main className="min-h-screen overflow-hidden bg-blue-50 px-4 py-5 sm:py-6">
       <div className="mx-auto w-full max-w-lg">
 
-        {/* Header */}
-        <header className="mb-4">
+        {/* ============================================
+            PERSONAL WELCOME HEADER
+        ============================================ */}
+
+        <header className="mb-5">
           <div className="flex items-center gap-3">
 
             {/* Logo */}
@@ -102,18 +134,21 @@ function CalendarPage() {
 
             <div>
               <h1 className="text-xl font-bold tracking-tight text-blue-950 sm:text-2xl">
-                Jaynee's Todo
+                {welcome.greeting}
               </h1>
 
               <p className="mt-0.5 text-xs text-slate-500 sm:text-sm">
-                Plan your day, one step at a time.
+                {welcome.message}
               </p>
             </div>
 
           </div>
         </header>
 
-        {/* Calendar Card */}
+        {/* ============================================
+            CALENDAR CARD
+        ============================================ */}
+
         <section className="rounded-3xl border border-blue-100 bg-white p-4 shadow-xl shadow-blue-100/50 sm:p-5">
 
           {/* Title */}
@@ -134,7 +169,10 @@ function CalendarPage() {
             todoDates={todoDates}
           />
 
-          {/* Legend */}
+          {/* ============================================
+              LEGEND
+          ============================================ */}
+
           <div className="mt-3 flex items-center justify-center gap-4 text-[10px] text-slate-400 sm:text-xs">
 
             <div className="flex items-center gap-1.5">
@@ -151,7 +189,10 @@ function CalendarPage() {
 
           </div>
 
-          {/* Selected Date */}
+          {/* ============================================
+              SELECTED DATE
+          ============================================ */}
+
           {selectedDate && (
             <div className="mt-3 flex items-center gap-3 rounded-2xl border border-blue-100 bg-blue-50 p-3">
 
@@ -170,7 +211,6 @@ function CalendarPage() {
                   {formatSelectedDate(selectedDate)}
                 </strong>
 
-                {/* Todo count */}
                 {todoDates[getDateString(selectedDate)] && (
                   <span className="mt-0.5 block text-[10px] text-blue-400 sm:text-xs">
                     {todoDates[getDateString(selectedDate)].total}{" "}
@@ -192,7 +232,10 @@ function CalendarPage() {
             </p>
           )}
 
-          {/* View Todos Button */}
+          {/* ============================================
+              VIEW TODOS BUTTON
+          ============================================ */}
+
           <button
             type="button"
             onClick={() =>
@@ -206,7 +249,10 @@ function CalendarPage() {
 
         </section>
 
-        {/* Footer */}
+        {/* ============================================
+            FOOTER
+        ============================================ */}
+
         <footer className="mt-3 text-center text-[11px] text-slate-400 sm:text-xs">
           Made with{" "}
           <span className="text-blue-500">♥</span>{" "}
